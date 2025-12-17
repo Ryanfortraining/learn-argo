@@ -1,0 +1,16 @@
+# Patterns to ignore when building packages.
+# Linus says: Don't package garbage.
+
+.DS_Store
+.git/
+.gitignore
+*.md
+*.swp
+*.bak
+*.tmp
+*.orig
+*~
+.project
+.idea/
+*.tmproj
+.vscode/

@@ -1,0 +1,35 @@
+================================================================================
+  ArgoCD has been installed successfully!
+================================================================================
+
+Linus says: "Talk is cheap. Show me the code."
+Your GitOps engine is now running. Here's what to do next:
+
+1. Wait for LoadBalancer to be ready (~2 minutes):
+
+   kubectl get svc -n {{ .Release.Namespace }} {{ .Release.Name }}-argo-cd-server --watch
+
+2. Get your ArgoCD server URL:
+
+   {{- if eq (index .Values "argo-cd" "server" "service" "type") "LoadBalancer" }}
+   export ARGOCD_SERVER=$(kubectl get svc -n {{ .Release.Namespace }} {{ .Release.Name }}-argo-cd-server -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+   echo "ArgoCD URL: http://$ARGOCD_SERVER"
+   {{- else }}
+   kubectl port-forward svc/{{ .Release.Name }}-argo-cd-server -n {{ .Release.Namespace }} 8080:443
+   echo "ArgoCD URL: https://localhost:8080"
+   {{- end }}
+
+3. Get the initial admin password:
+
+   kubectl get secret -n {{ .Release.Namespace }} argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d && echo
+
+4. Login with:
+   Username: admin
+   Password: [from step 3]
+
+5. Change the admin password after first login!
+
+================================================================================
+Documentation: https://argo-cd.readthedocs.io/
+Chart Repository: {{ .Chart.Home }}
+================================================================================
